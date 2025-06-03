@@ -54,7 +54,6 @@ class MyStrategy(bt.Strategy):
         self.ma1 = bt.indicators.SMA(self.data0, period=self.params.period2)
         self.ma2 = bt.indicators.SMA(self.data1, period=self.params.period2)
 
-
         # 添加分析器
         self.analyzers.returns = bt.analyzers.Returns()
         self.analyzers.drawdown = bt.analyzers.DrawDown()
@@ -90,8 +89,8 @@ if __name__ == '__main__':
     # 3. 设置策略
     cerebro = bt.Cerebro()  # 创建大脑
 
-    start_time = '20250101'  # 回测开始时间
-    end_time = '20250501'  # 回测结束时间
+    start_time = '20170101'  # 回测开始时间
+    end_time = '20170501'  # 回测结束时间
     stock_code = '600519'  # 股票代码
     data = get_data(stock_code, start_time, end_time)  # 获取数据
     data2 = get_data('600036', start_time, end_time)

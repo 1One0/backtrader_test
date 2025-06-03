@@ -5,11 +5,6 @@ import backtrader as bt
 import matplotlib.pyplot as plt
 import akshare as ak
 
-# 对于matplot绘图的中文字体和符号进行设置
-plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置字体为微软雅黑
-plt.rcParams['axes.unicode_minus'] = False  # 设置负号正常显示
-
-
 # 1. 获取数据
 def get_data(stock_code: str, start_time='20240101', end_time='20250101'):
     df = ak.stock_zh_a_hist(
@@ -66,6 +61,8 @@ class MyStrategy(bt.Strategy):
 
 
 if __name__ == '__main__':
+
+
     # 3. 设置策略
     cerebro = bt.Cerebro()  # 创建大脑
 
@@ -82,12 +79,17 @@ if __name__ == '__main__':
     cash = 100000  # 初始资金
     cerebro.broker.setcash(cash)  # 设置初始资金
     cerebro.broker.setcommission(commission=0.001)  # 设置手续费
+    cerebro.broker.set_slippage_perc(perc=0.001)  # 设置滑点
 
     # 5. 执行回测
     print(f'初始资金: {cerebro.broker.getvalue():.2f} 元, 回测时间: {start_time} 至 {end_time}')
     results = cerebro.run()
     print(f'回测结束资金: {cerebro.broker.getvalue():.2f} 元')
     strat = results[0]
+
+    # 对于matplot绘图的中文字体和符号进行设置
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 设置字体为微软雅黑
+    plt.rcParams['axes.unicode_minus'] = False  # 设置负号正常显示
 
     # 6. 绘制图表
     cerebro.plot(style='candlestick')
