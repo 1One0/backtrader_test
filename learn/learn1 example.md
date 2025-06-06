@@ -9,7 +9,60 @@ backtrader中数据格式是`Data Feed`, 通常我们的数据是CSV, Pandas Dat
 
 ---
 
-在这里使用`AKShare`股票数据, 获取`历史行情数据-东财`
+### BaoStock
+在这里使用`BaoStock`股票数据
+
+> http://baostock.com/baostock/index.php/A%E8%82%A1K%E7%BA%BF%E6%95%B0%E6%8D%AE
+
+```python
+import baostock as bs
+import backtrader as bt
+import pandas as pd
+
+# 登陆baostock系统
+lg = bs.login()
+print('login respond error_code:' + lg.error_code)
+print('login respond error_msg:' + lg.error_msg)
+
+# 获取贵州茅台(600519)的日线数据
+rs = bs.query_history_k_data_plus(
+    "sh.600519",
+    "date,open,high,low,close,volume",  # 只获取需要的字段
+    start_date='2020-01-01', 
+    end_date='2023-12-31',
+    frequency="d", 
+    adjustflag="2"
+)
+
+# 将数据转换为DataFrame
+data_list = []
+while (rs.error_code == '0') & rs.next():
+    data_list.append(rs.get_row_data())
+df = pd.DataFrame(data_list, columns=rs.fields)
+
+# 登出系统
+bs.logout()
+
+# 数据预处理
+df['date'] = pd.to_datetime(df['date'])  # 转换为datetime类型
+df.set_index('date', inplace=True)  # 设置日期为索引
+df = df.astype(float)  # 将所有数据转换为float类型
+
+# 重命名列名以符合backtrader要求
+df = df[['open', 'high', 'low', 'close', 'volume']]  # 已经是我们需要的列名
+
+print(df.head())  # 打印前几行数据查看
+
+# 创建backtrader数据源
+data = bt.feeds.PandasData(    
+    dataname=df,
+)
+
+```
+
+### AKShare
+
+也可以使用`AKShare`股票数据, 获取`历史行情数据-东财`
 
 > https://akshare.akfamily.xyz/data/stock/stock.html#id23
 
