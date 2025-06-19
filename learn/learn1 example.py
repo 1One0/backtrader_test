@@ -113,13 +113,11 @@ if __name__ == '__main__':
     stock_code_akshare = '600519'
     data = get_data_akshare(stock_code_akshare)  # 获取数据
 
-
     cerebro.adddata(data)  # 添加数据
-
     cerebro.addstrategy(MyStrategy)  # 添加策略
 
     # 4. 设置broker
-    cash = 500000  # 初始资金
+    cash = 100000  # 初始资金
     cerebro.broker.setcash(cash)  # 设置初始资金
     cerebro.broker.setcommission(commission=0.001)  # 设置手续费
     cerebro.broker.set_slippage_perc(perc=0.001)  # 设置滑点
